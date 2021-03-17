@@ -4,6 +4,7 @@
 **Team Members: Weitai Qian, Ata Vafi**
 
 ## Abstract
+This project builds a speaker recognition system relying on small number of samples. It mainly has 3-stages pipeline: (1) feature extraction (2) feature learning (3) speaker identification. In the feature extraction stage, Short-Time Fourier Transform (STFT) is used with hamming window size of 256. 20 filters are then used for MFCC to generate 20-dimension training vectors. After feature extraction, vector quantization and k-means clustering are used to learn these features. The system achieves 100% accuracy on training set and 100% accuracy on testing set before notch filters are used to generate more noisy dataset.
 
 ## Introduction
 
