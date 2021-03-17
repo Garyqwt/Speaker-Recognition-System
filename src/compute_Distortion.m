@@ -13,10 +13,11 @@ function D = compute_Distortion(X, center_idx, centroids)
     D = 0;
     
     for i = 1:m
-        cluster = centroids(center_idx(i));
-        distance = norm(X(i,:) - cluster);
+        cluster = centroids(center_idx(i),:);
+        err = (X(i,:) - cluster).^2;
+        distance = sum(err);
         D = D + distance;
     end
-    D = D / m;
+    D = D / K;
 end
             

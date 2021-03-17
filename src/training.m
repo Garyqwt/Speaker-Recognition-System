@@ -1,25 +1,24 @@
-function codebook_Table = training(x_table, K, threshold)
+function codebook_Table = training(mel_cepstrum, K, threshold)
 % Train the input data table to get codebooks
 %
 % Input:
-%   x_table - a table containing n speakers' data
+%   mel_cepstrum - training vector for n speakers
+%              - n x 1 cell array
 %   K - number of clusters
 %   threshold - threshold of average cluster distortion
 % Output:
 %   codebook_Table - a table containing n speakers' codebooks
 
     % get the number of speakers
-    n = width(x_table);
+    n = size(mel_cepstrum,2);
     
-    % Initialize the codebook table with speaker 1
-    x = table2array(x_table(:,1));
-    [codebook, ~] = LBG(x, K, threshold);
-    codebook_Table = table(codebook);
+    % Initialize the codebook table
+    codebook_Table = table;
     
-    for i = 2:n
-        x = table2array(x_table(:,i));
+    for i = 1:n
+        x = mel_cepstrum{i};
         [codebook, ~] = LBG(x, K, threshold);
-        codebook_Table = [codebook_Table codebook];
+        codebook_Table = addvars(codebook_Table, codebook);
     end
 end
         

@@ -1,4 +1,4 @@
-function codebook = LBG(x, K, threshold)
+function [codebook, center_idx] = LBG(x, K, threshold)
 % LBG Algorithm
 % This function performs interatively K-mean clustering until certain 
 % threshold is met.
@@ -27,6 +27,7 @@ while(size(codebook,1) < K)
     while(err > threshold)
         center_idx = find_NearestCentroid(x, codebook);
         codebook = update_Centroids(codebook, x, center_idx);
+        % D is the average distortion of each cluster in this codebook
         D = compute_Distortion(x, center_idx, codebook);
         err = (D - avg_dist)/avg_dist;
         avg_dist = D;

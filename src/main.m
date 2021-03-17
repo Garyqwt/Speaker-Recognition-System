@@ -4,48 +4,49 @@ clc;
 
 cd 'D:\Study\UCD\21WQ\EEC201\Final Project\Data\Training_Data'
 
-[s1, fs1] = audioread('s1.wav');
-[s2, fs2] = audioread('s2.wav');
-[s3, fs3] = audioread('s3.wav');
-[s4, fs4] = audioread('s4.wav');
-[s5, fs5] = audioread('s5.wav');
-[s6, fs6] = audioread('s6.wav');
-[s7, fs7] = audioread('s7.wav');
-[s8, fs8] = audioread('s8.wav');
-[s9, fs9] = audioread('s9.wav');
-[s10, fs10] = audioread('s10.wav');
-[s11, fs11] = audioread('s11.wav');
-
-plot(0:length(s5)-1, s5);
-
-
-X=[1 3; 4 2; 6 1; 7 0];
-centroids = [2 1 5; 0 1 2];
-
-
-%findMyHood returns the centroid memberships for every example
-%
-%Inputs:
-%   X - [m*n] matrix containing m-samples and n-number of features
-%   centroids - [K*n] matrix containing K-number of centroids
-%               on a n-dimensional space (feature space)
-%Outputs:
-%   idx - [m*1] matrix containing each centroid membership on m-samples
-%
-
-% Set K
-K = size(centroids, 1);
-idx = zeros(size(X,1), 1);
-distance = zeros(size(X, 1), K);
-
-for i = 1:K
-    diff = bsxfun(@minus, X, centroids(i,:));
-    distance(:, i) = sum(diff.^2, 2);
+for j=1:1:11
+    filename = 's' + string(j) + '.wav';
+    [Audio,fs] = audioread(filename);
+    Ts = 1/fs;
+    t = (0:1:length(Audio)-1)*Ts;
+    data{j}= {Audio,t',fs};
 end
 
-[dummy idx] = min(distance, [], 2);
-%     % Alternatively:
-%     for j = 1:size(X,1)
-%        [dummy idx(j)] = min(distance(j, :));
-%     end
+% plot(0:length(s5)-1, s5);
+
+% cd 'D:\Study\UCD\21WQ\EEC201\Final Project\src'
+
+NFB = 20;
+NFFT = 256;
+N = 256;
+M = 100;
+ov = round(2/3*N);
+K = 4;
+LBG_threshold = 1;
+
+for j=1:11
+    mel_cepstrum{j} = MFCC(cell2mat(data{j}(1)), ov, NFFT, NFB, fs);
+end
+
+codebook_Table = training(mel_cepstrum, K, LBG_threshold);
+
+cd 'D:\Study\UCD\21WQ\EEC201\Final Project\Data\Test_Data'
+
+for j=1:1:11
+    filename = 's' + string(j) + '.wav';
+    [Audio,fs] = audioread(filename);
+    data_test{j}= {Audio,fs};
+end
+
+for j=1:11
+    mel_cepstrum_test{j} = MFCC(cell2mat(data{j}(1)), ov, NFFT, NFB, fs);
+end
+
+threshold = find_threshold(codebook_Table, mel_cepstrum_test, LBG_threshold);
+
+[avg_Distortion, speakerID] = testing(codebook_Table, mel_cepstrum_test{10}, threshold);
+
+[test_audio,fs] = audioread('s12.wav');
+mel_cepstrum_temp = MFCC(test_audio, ov, NFFT, NFB, fs);
+[distortion, speakerID] = testing(codebook_Table, mel_cepstrum_temp, threshold);
 
