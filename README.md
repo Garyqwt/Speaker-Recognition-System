@@ -52,3 +52,14 @@ K-means clustering is a common technique in unsupervised learning, and LBG algor
 
 ### 3. Speaker Identification
 Several sound tracks are used for training to generate a codebook containing n speakers' sound features. Then a single voice file is used as testing set and find the distortions in different codewords. The codeword with smallest distortion is most likely corresponding to this testing voice only if the distortion is below certain threshold. This threshold is dynamically explored, since many factors like the number of clusters and size of hamming window impact the threshold of speaker identification. So, the corresponding test voices of training set are used to find the optimal threshold range. In this case, our system can reject some voice samples which are not in the training set.
+
+## Results
+### 1. Feature Extraction
+
+### 2. Vector Quantization
+Test 5: Check any two dimensions clustering in a 2D plane
+Test 6: Plot VQ codewords in two dimensions in a 2D plane
+<p align="center">
+    <img src="/image/clustering_single.png" width = "383" height = "315" alt = "single clustering" />
+    <img src="/image/cluster_sample.png" width = "383" height = "315" alt = "VQ example" />
+</p>
