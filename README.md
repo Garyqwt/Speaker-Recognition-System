@@ -80,3 +80,11 @@ This test use a trained codebook composed of 11 original training speakers' voic
 In this test, we generate noisy test set with notch filter. We tried different range of stopband, and the accuracy of system decreases with wider stopband. It meets our assumption because more information is lost as the stopband becomes wider. The sampling frequency of our signal is 12.5kHz, so we test five different stopbands: [1k 2k], [1k 3k], [1k 4k], [1k 5k], [1k 6k]. The accuracy remains 100% when we have a narrow stopband from 1kHz to 2kHz, then the performance decreases a lot. For the last test [1k 6k], it only successfully identifies 1/11 speakers, then we decide to stop here.
 
 ![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/a5170ffaee3325336cd8fc6b0a5de4577b702c0c/image/Acc_vs_filter.png?raw=true)
+
+## Future Work
+This system has good performance using origianl training and testing sets. It can achieve higher accuracy than human ear when the noise is not introduced. However, when the notch filters are applied to testing files, it fails to identify many voice files which can be distinguished by human ears. This system can also be improved with larger dataset. For the optimal threshold finding, more analytic way could be proposed rather than using empirical oberservation.
+
+## Appendix
+* This project is done as the final project of EEC201 in UC Davis.
+* We appreciate helps from Dr. Z.Ding and TA Songyang Zhang.
+* We acknowledge many related papers which provided basic concepts in feature extraction and vector quantization.
