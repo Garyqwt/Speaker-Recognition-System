@@ -51,7 +51,7 @@ K-means clustering is a common technique in unsupervised learning, and LBG algor
 (8)	If average distortion is acceptable but the number of clusters doesn’t meet requirement, repeat (2)(3)(4)(5).
 
 ### 3. Speaker Identification
-Several sound tracks are used for training to generate a codebook containing n speakers' sound features. Then a single voice file is used as testing set and find the distortions in different codewords. The codeword with smallest distortion is most likely corresponding to this testing voice only if the distortion is below certain threshold. This threshold is dynamically explored, since many factors like the number of clusters and size of hamming window impact the threshold of speaker identification. So, the corresponding test voices of training set are used to find the optimal threshold range. In this case, our system can reject some voice samples which are not in the training set.
+Several sound tracks are used for training to generate a codebook containing n speakers' sound features. Then a single voice file is used as testing set and find the distortions in different codewords. The codeword with smallest distortion is most likely corresponding to this testing voice only if the distortion is below certain threshold. This threshold is dynamically explored, since many factors like the number of clusters and size of hamming window impact the threshold of speaker identification. So, we choose 2 * max_distortion as the threshold to accept the testing sample. In this case, our system can reject some voice samples which are not in the training set.
 
 ## Results
 ### 1. Feature Extraction
@@ -63,3 +63,16 @@ Test 6: Plot VQ codewords in two dimensions in a 2D plane
     <img src="/image/clustering_single.png" width = "383" height = "315" alt = "single clustering" />
     <img src="/image/cluster_sample.png" width = "383" height = "315" alt = "VQ example" />
 </p>
+
+### 3. Speaker Identification
+The optimal number of clusters is the first parameter we decided to determine, and we want it to make the average distortion per cluster is in a reasonable range and also has good resolution to distinguish among speakers. So we test number of clusters = [2 4 8 16 32] and get average distortion per cluster for each test. Then we find the elbow point in this plot and determine it is the optimal number of clusters in our case.
+
+![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_vs_Clusters.png?raw=true)
+
+The elbow point is when number of clusters is 4 and we use 4 clusters for all other tests. When the number of clusters is 4, we have max distortion in the codebook equal to 1.0932. Then we determine the threshold to accpet the test case belonging to this codebook to 1.0932 * 2 = 2.1864. After determining the threshold, we run several tests on this system:
+
+#### Testing with original testing set
+This test use a trained codebook composed of 11 original training speakers' voice and 14 test cases including 11 original test cases and 3 cases from our friends.In this test, our accuracy is 100% and it could reject voices which have not seen before. In the figure below, the red dash line is the threshold to accept the voice. So, untrained voices (s12, s13 and s14) are rejected because of high distortion.
+
+![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_of_Testset.png?raw=true)
+
