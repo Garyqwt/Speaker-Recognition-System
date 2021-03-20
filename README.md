@@ -35,7 +35,10 @@ where
 
 In stft, the speech signal is blocked into frames of N samples with overlap: The first frame consists of the first N samples. The second frame begins M samples after the first frame, and overlaps it by N - M samples, etc. N and M are N = 256 (which is equivalent to ~ 30 msec windowing) and M = N/3. The output of STFT is the spectrum which has a hermitian symmetry property because the audio signal is real. As a result, the half-length of the spectrum is selected since the second half is simply redundant.
 
-![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/56d07669c46644a9d2ce0c1065118074dbcb54f5/image/STFT_2.png?raw=true)
+<p align="center">
+  <img width="460" height="300" src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/56d07669c46644a9d2ce0c1065118074dbcb54f5/image/STFT_2.png">
+</p>
+
 
 #### Computing the Mel filter bank
 To get the filter banks we first chose a lower and upper frequency. The lower frequency is 1kHz and upper frequency is 6.25 kHz. Then follow these steps:
