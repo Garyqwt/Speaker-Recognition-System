@@ -4,7 +4,7 @@
 **Team Members: Weitai Qian, Ata Vafi**
 
 ## Abstract
-This project builds a speaker recognition system relying on small number of samples. It mainly has 3-stages pipeline: (1) feature extraction (2) feature learning (3) speaker identification. In the feature extraction stage, Short-Time Fourier Transform (STFT) is used with hamming window size of 256. 20 filters are then used for MFCC to generate 20-dimension training vectors. After feature extraction, vector quantization and k-means clustering are used to learn these features. The system achieves 100% accuracy on training set and 100% accuracy on testing set before notch filters are used to generate more noisy dataset.
+This project builds a speaker recognition system relying on small number of samples. It mainly has 3-stages pipeline: (1) feature extraction (2) feature learning (3) speaker identification. In the feature extraction stage, Short-Time Fourier Transform (STFT) is used with hamming window size of 256. 20 filters are then used for MFCC to generate 20-dimension training vectors. After feature extraction, vector quantization and k-means clustering are used to learn these features. The system achieves 100% accuracy on training set and 100% accuracy on testing set before notch filters are used to generate more noisy dataset. After the notch filters are applied to the test signals, the accuracy decreases as the range of stopband becomes larger.
 
 ## Introduction
 ![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/0908619db721db564444893b9eab3428cad87615/image/pipeline.PNG?raw=true)
@@ -19,12 +19,37 @@ Speaker identification stage is a training and testing phase. A codebook table c
 ## Methods
 First, since the audio amplitude does not contain any unique information for users, the amplitude is normalized to be [-1,1] range. Next, the main part of the signal is clipped and the short time discrete Fourier transform is performed on the clipped signal. In stft, the speech signal is blocked into frames of N samples with overlap: The first frame consists of the first N samples. The second frame begins M samples after the first frame, and overlaps it by N - M samples, etc. N and M are N = 256 (which is equivalent to ~ 30 msec windowing) and M = N/3.The output of STFT is the spectrum which has a hermitian symmetry property because the audio signal is real. As a result, the half length of the spectrum is selected since the second half is simply redundant. 
 
-### 1. Computing the Mel filterbank
-In this section we used 10 filterbanks. To get the filterbanks shown in figure 1(a) we first have to choose a lower and upper frequency. Which is for our case, 1000Hz for the lower and 1250Hz for the upper frequency. Then follow these steps:
-1)	Using equation 1, convert the upper and lower frequencies to Mels. 
+### 1. Feature Extraction
+#### Short-Time Fourier Transform
+The short-time Fourier transform (STFT) is used to analyze how the frequency content of a nonstationary signal changes over time. The STFT of a signal is calculated by sliding an analysis window of length M over the signal and calculating the discrete Fourier transform of the windowed data. The window hops over the original signal at intervals of R samples. Most window functions taper off at the edges to avoid spectral ringing. If a nonzero overlap length L is specified, overlap-adding the windowed segments compensates for the signal attenuation at the window edges. The DFT of each windowed segment is added to a matrix that contains the magnitude and phase for each point in time and frequency. The number of rows in the STFT matrix equals the number of DFT points, and the number of columns is given by
+<img src="https://render.githubusercontent.com/render/math?math=k = \frac{Nx-L}{M-L}">
+where Nx is the length of the original signal x(n) and the ⌊⌋ symbols denote the floor function.
+The STFT matrix is given by X(f) = [X1(f) X2(f) X3(f) ⋯ Xk(f)] such that the mth element of this matrix is
 
-Since we used 40 filterbanks, for which we need 42 points. This means we need 40 additional points spaced linearly between 1000 and 1250. Now use equation 2 to convert these back to Hertz:
-1)	M(f) = 1125ln(1 + f/700);
+<img src="https://render.githubusercontent.com/render/math?math=Xm(f) = \sum_{n=-infty}^{\infty} x(n)g(n-mR)e^{-i 2\pi\fn}">
+
+where
+* g(n) — Window function of length M
+* Xm(f) — DFT of windowed data centered about time mR
+* R — Hop size between successive DFTs. The hop size is the difference between the window length Mand the overlap length L
+
+In stft, the speech signal is blocked into frames of N samples with overlap: The first frame consists of the first N samples. The second frame begins M samples after the first frame, and overlaps it by N - M samples, etc. N and M are N = 256 (which is equivalent to ~ 30 msec windowing) and M = N/3. The output of STFT is the spectrum which has a hermitian symmetry property because the audio signal is real. As a result, the half-length of the spectrum is selected since the second half is simply redundant.
+
+![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/56d07669c46644a9d2ce0c1065118074dbcb54f5/image/STFT_2.png?raw=true)
+
+#### Computing the Mel filter bank
+To get the filter banks we first chose a lower and upper frequency. The lower frequency is 1kHz and upper frequency is 6.25 kHz. Then follow these steps:
+* Using M(f) = 1125ln(1+f/700), the upper and lower frequencies are converted to Mels. In our case 1 kHz is 998.2 Mels and 6.25 kHz is 2582.34 Mels.
+* Since 40 filter banks are used in this project, we need total points of 42. This means we need 40 additional points spaced linearly between 998.2 and 2582.34. This comes out to:
+m(i) = 998.2, 1036.83, 1075.47, …, 2543.702, 2582.34
+* Now we used M-1(f) = 700(exp(m/1125)-1) to convert these back to Hertz:
+h(i) =999.97, 1059.37, 1120.84, …, 6015.33, 6249.97
+* Since the frequency resolution required to put filters at the exact points calculated above is not available, so we need to round those frequencies to the nearest FFT bin. This process does not affect the accuracy of the features. To convert the frequencies to fft bin numbers we need to know the FFT size and the sample rate,
+f(i) = floor((nfft+1)×h(i)×Ts)
+This results in the following sequence:
+f(i) = 20, 21, 23, … , 123, 128
+* We can see that the final filter bank finishes at bin 128, which corresponds to 6.25 kHz with a 128-point FFT size.
+Now we create our filter banks. The first filter bank will start at the first point, reach its peak at the second point, then return to zero at the 3rd point. The second filter bank will start at the 2nd point, reach its max at the 3rd, then be zero at the 4th etc.
 
 ![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/ec48416b8d99bec86f16d6bdb98e3883bb3318d5/image/MFCC_40.png?raw=true)
 
@@ -55,6 +80,14 @@ Several sound tracks are used for training to generate a codebook containing n s
 
 ## Results
 ### 1. Feature Extraction
+#### STFT
+![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/66da39fc2f871f053892164c1f08bc5b203fdeb0/image/STFT.png?raw=true)
+
+#### Cepstrums
+<p align="center">
+    <img src="/image/Cepstrum1.png" width = "383" height = "315" alt = "single clustering" />
+    <img src="/image/Cepstrum2.png" width = "383" height = "315" alt = "VQ example" />
+</p>
 
 ### 2. Vector Quantization
 Test 5: Check any two dimensions clustering in a 2D plane
