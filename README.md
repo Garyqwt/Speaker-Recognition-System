@@ -76,3 +76,7 @@ This test use a trained codebook composed of 11 original training speakers' voic
 
 ![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_of_Testset.png?raw=true)
 
+#### Testing with noisy testing set
+In this test, we generate noisy test set with notch filter. We tried different range of stopband, and the accuracy of system decreases with wider stopband. It meets our assumption because more information is lost as the stopband becomes wider. The sampling frequency of our signal is 12.5kHz, so we test five different stopbands: [1k 2k], [1k 3k], [1k 4k], [1k 5k], [1k 6k]. The accuracy remains 100% when we have a narrow stopband from 1kHz to 2kHz, then the performance decreases a lot. For the last test [1k 6k], it only successfully identifies 1/11 speakers, then we decide to stop here.
+
+![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/a5170ffaee3325336cd8fc6b0a5de4577b702c0c/image/Acc_vs_filter.png?raw=true)
