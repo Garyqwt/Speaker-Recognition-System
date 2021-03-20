@@ -59,7 +59,22 @@ Now we create our filter banks. The first filter bank will start at the first po
 Finally, we multiplied the mel filter to the input spectrum and got the Mel spectrum. After that in the cepstrum we take the log of data and perform discrete Fourier transform on the data. Cepstrum converts log mel spectrum back to time. The result is called the mel frequency cepstrum coefficients (MFCC). The cepstral representation of the speech spectrum provides a good representation of the local spectral properties of the signal for the given frame analysis. Because the mel spectrum coefficients (and so their logarithm) are real numbers, they can be converted to the time domain using the Discrete Cosine Transform (DCT).
 
 ### 2. Vector Quantization
-K-means clustering is a common technique in unsupervised learning, and LBG algorithm is an iterative algorithm based on k-means clustering. For each speaker, 
+#### K-means Clustering
+K-means clustering is a common technique in unsupervised learning. Its goal is to minimize the squared error function based on Euclidean distances. The k-means clustering has cost function:
+
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=J(V) = \sum_{i=1}^{c} \sum_{j=1}^{ci} {(|xi-vj|)}^2">
+ </p>
+
+where 
+* |xi-vj| is the Euclidean distance between xi and vj
+* 'ci' is the number of data points in ith cluster
+* 'c' is the number of cluster centers
+
+In our case, we have a 20-dimensions vector from MFCC filter banks, so the cost function is computed based on 20-dimension Euclidean distance. The k-means clustering algorithm finds the best cluster center for each data point based on the number of clusters.
+
+#### LBG Algorithm
+LBG algorithm is an iterative algorithm based on k-means clustering. For each speaker, 
 ![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/fef532c2591c2df31a2581142b7962c372ea2eda/image/LBG.png?raw=true)
 
 (1)	Initialize a centroid which locates at mean of every dimension.
