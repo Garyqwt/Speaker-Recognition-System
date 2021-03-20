@@ -18,6 +18,6 @@ function threshold = find_threshold(codebook_Table, mel_cepstrum_test, LBG_thres
         temp_arr(i,1) = avg_Distortion;
         temp_arr(i,2) = speakerID;
     end
-    threshold = max(temp_arr(:,1));
+    threshold = max(temp_arr(:,1)) * 2;
 end
 
