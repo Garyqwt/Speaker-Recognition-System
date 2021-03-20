@@ -26,7 +26,9 @@ The short-time Fourier transform (STFT) is used to analyze how the frequency con
 where Nx is the length of the original signal x(n) and the ⌊⌋ symbols denote the floor function.
 The STFT matrix is given by X(f) = [X1(f) X2(f) X3(f) ⋯ Xk(f)] such that the mth element of this matrix is
 
-<img src="https://render.githubusercontent.com/render/math?math=Xm(f) = \sum_{n=-infty}^{\infty} x(n)g(n-mR)e^{-i 2\pi\fn}">
+<p align="center">
+  <img src="https://render.githubusercontent.com/render/math?math=Xm(f) = \sum_{n=-infty}^{\infty} x(n)g(n-mR)e^{-i 2\pi\fn}">
+</p>
 
 where
 * g(n) — Window function of length M
