@@ -84,7 +84,10 @@ Several sound tracks are used for training to generate a codebook containing n s
 ## Results
 ### 1. Feature Extraction
 #### STFT
-![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/66da39fc2f871f053892164c1f08bc5b203fdeb0/image/STFT.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/66da39fc2f871f053892164c1f08bc5b203fdeb0/image/STFT.png">
+</p>
+
 
 #### Cepstrums
 <p align="center">
@@ -103,19 +106,25 @@ Test 6: Plot VQ codewords in two dimensions in a 2D plane
 ### 3. Speaker Identification
 The optimal number of clusters is the first parameter we decided to determine, and we want it to make the average distortion per cluster is in a reasonable range and also has good resolution to distinguish among speakers. So we test number of clusters = [2 4 8 16 32] and get average distortion per cluster for each test. Then we find the elbow point in this plot and determine it is the optimal number of clusters in our case.
 
-![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_vs_Clusters.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_vs_Clusters.png">
+</p>
 
 The elbow point is when number of clusters is 4 and we use 4 clusters for all other tests. When the number of clusters is 4, we have max distortion in the codebook equal to 1.0932. Then we determine the threshold to accpet the test case belonging to this codebook to 1.0932 * 2 = 2.1864. After determining the threshold, we run several tests on this system:
 
 #### Testing with original testing set
 This test use a trained codebook composed of 11 original training speakers' voice and 14 test cases including 11 original test cases and 3 cases from our friends.In this test, our accuracy is 100% and it could reject voices which have not seen before. In the figure below, the red dash line is the threshold to accept the voice. So, untrained voices (s12, s13 and s14) are rejected because of high distortion.
 
-![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_of_Testset.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/c9d4116d64e84eb8d511a197e71619d25687f9c8/image/Distortion_of_Testset.png">
+</p>
 
 #### Testing with noisy testing set
 In this test, we generate noisy test set with notch filter. We tried different range of stopband, and the accuracy of system decreases with wider stopband. It meets our assumption because more information is lost as the stopband becomes wider. The sampling frequency of our signal is 12.5kHz, so we test five different stopbands: [1k 2k], [1k 3k], [1k 4k], [1k 5k], [1k 6k]. The accuracy remains 100% when we have a narrow stopband from 1kHz to 2kHz, then the performance decreases a lot. For the last test [1k 6k], it only successfully identifies 1/11 speakers, then we decide to stop here.
 
-![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/a5170ffaee3325336cd8fc6b0a5de4577b702c0c/image/Acc_vs_filter.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/a5170ffaee3325336cd8fc6b0a5de4577b702c0c/image/Acc_vs_filter.png">
+</p>
 
 ## Future Work
 This system has good performance using origianl training and testing sets. It can achieve higher accuracy than human ear when the noise is not introduced. However, when the notch filters are applied to testing files, it fails to identify many voice files which can be distinguished by human ears. This system can also be improved with larger dataset. For the optimal threshold finding, more analytic way could be proposed rather than using empirical oberservation.
