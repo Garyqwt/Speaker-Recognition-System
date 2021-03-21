@@ -110,8 +110,8 @@ Several sound tracks are used for training to generate a codebook containing n s
 
 #### Cepstrums
 <p align="center">
-    <img src="/image/Cepstrum1.jpg" width = "383" height = "315" alt = "single clustering" />
-    <img src="/image/Cepstrum2.jpg" width = "383" height = "315" alt = "VQ example" />
+    <img src="/image/Cepstrum1.jpg"/>
+    <img src="/image/Cepstrum2.jpg"/>
 </p>
 
 ### 2. Vector Quantization
