@@ -56,7 +56,9 @@ f(i) = 20, 21, 23, … , 123, 128
 * We can see that the final filter bank finishes at bin 128, which corresponds to 6.25 kHz with a 128-point FFT size.
 Now we create our filter banks. The first filter bank will start at the first point, reach its peak at the second point, then return to zero at the 3rd point. The second filter bank will start at the 2nd point, reach its max at the 3rd, then be zero at the 4th etc.
 
-![alt text](https://github.com/Garyqwt/Speaker-Recognition-System/blob/ec48416b8d99bec86f16d6bdb98e3883bb3318d5/image/MFCC_40.png?raw=true)
+<p align="center">
+  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/9dbdc42ad8f93591def9d59c2f0ce7c20fe595e7/image/Mel2.jpg">
+</p>
 
 Finally, we multiplied the mel filter to the input spectrum and got the Mel spectrum. After that in the cepstrum we take the log of data and perform discrete Fourier transform on the data. Cepstrum converts log mel spectrum back to time. The result is called the mel frequency cepstrum coefficients (MFCC). The cepstral representation of the speech spectrum provides a good representation of the local spectral properties of the signal for the given frame analysis. Because the mel spectrum coefficients (and so their logarithm) are real numbers, they can be converted to the time domain using the Discrete Cosine Transform (DCT).
 
@@ -102,14 +104,14 @@ Several sound tracks are used for training to generate a codebook containing n s
 ### 1. Feature Extraction
 #### STFT
 <p align="center">
-  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/66da39fc2f871f053892164c1f08bc5b203fdeb0/image/STFT.png">
+  <img src="https://github.com/Garyqwt/Speaker-Recognition-System/blob/81f115102390512a8597ac6e6be0ded0830cf8db/image/STFT.jpg">
 </p>
 
 
 #### Cepstrums
 <p align="center">
-    <img src="/image/Cepstrum1.png" width = "383" height = "315" alt = "single clustering" />
-    <img src="/image/Cepstrum2.png" width = "383" height = "315" alt = "VQ example" />
+    <img src="/image/Cepstrum1.jpg" width = "383" height = "315" alt = "single clustering" />
+    <img src="/image/Cepstrum2.jpg" width = "383" height = "315" alt = "VQ example" />
 </p>
 
 ### 2. Vector Quantization
